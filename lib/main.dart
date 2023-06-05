@@ -96,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              '我的学号：20211050221，我的姓名：江康乐',
+              '我的学号：20211050221，我的姓名：江康乐.',
               
             ),
             Text(
