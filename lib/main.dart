@@ -31,7 +31,6 @@ class MyApp extends StatelessWidget {
       home: const MyHomePage(title: '这是我的信息'),
     );
   }
-  
 }
 
 class MyHomePage extends StatefulWidget {
@@ -98,66 +97,64 @@ class _MyHomePageState extends State<MyHomePage> {
           // center the children vertically; the main axis here is the vertical
           // axis because Columns are vertical (the cross axis would be
           // horizontal).
-          
+
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
               '我的学号：20211050221，我的姓名：江康乐.',
-              
             ),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
-Container(
-  color: Colors.green,
-  child: Padding(
-    padding: const EdgeInsets.all(16.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.max, //有效，外层Colum高度为整个屏幕
-      children: <Widget>[
-        Container(
-          color: Colors.red,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,//无效，内层Colum高度为实际高度  
-            children: <Widget>[
-              Text("hello world "),
-              Text("I am Jack "),
-            ],
-          ),
-        )
-      ],
-    ),
-  ),
-),
+            Container(
+              color: Colors.green,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max, //有效，外层Colum高度为整个屏幕
+                  children: <Widget>[
+                    Container(
+                      color: Colors.red,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max, //无效，内层Colum高度为实际高度
+                        children: <Widget>[
+                          Text("hello world "),
+                          Text("I am Jack "),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
 
-ConstrainedBox(
-  constraints: BoxConstraints(
-    minWidth: double.infinity, //宽度尽可能大
-    minHeight: 50.0 //最小高度为50像素
-  ),
-  child: Container(
-    height: 50.0, 
-    child: redBox ,
-  ),
-),
- // 模糊进度条(会执行一个动画)
-LinearProgressIndicator(
-  backgroundColor: Colors.grey[200],
-  valueColor: AlwaysStoppedAnimation(Colors.blue),
-),
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                  minWidth: double.infinity, //宽度尽可能大
+                  minHeight: 50.0 //最小高度为50像素
+                  ),
+              child: Container(
+                height: 50.0,
+                child: redBox,
+              ),
+            ),
+            // 模糊进度条(会执行一个动画)
+            LinearProgressIndicator(
+              backgroundColor: Colors.grey[200],
+              valueColor: AlwaysStoppedAnimation(Colors.blue),
+            ),
 //进度条显示50%
-LinearProgressIndicator(
-  backgroundColor: Colors.grey[200],
-  valueColor: AlwaysStoppedAnimation(Colors.blue),
-  value: .5, 
-),
+            LinearProgressIndicator(
+              backgroundColor: Colors.grey[200],
+              valueColor: AlwaysStoppedAnimation(Colors.blue),
+              value: .5,
+            ),
           ],
-          
         ),
       ),
- 
+
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',

@@ -52,6 +52,24 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
 
+             DecoratedBox(
+   decoration: BoxDecoration(
+     gradient: LinearGradient(colors:[Colors.red,Colors.orange.shade700]), //背景渐变
+     borderRadius: BorderRadius.circular(3.0), //3像素圆角
+     boxShadow: [ //阴影
+       BoxShadow(
+         color:Colors.black54,
+         offset: Offset(2.0,2.0),
+         blurRadius: 4.0
+       )
+     ]
+   ),
+  child: Padding(
+    padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 18.0),
+    child: Text("Login", style: TextStyle(color: Colors.white),),
+  )
+),
+
  Wrap(
    spacing: 8.0, // 主轴(水平)方向间距
    runSpacing: 4.0, // 纵轴（垂直）方向间距
