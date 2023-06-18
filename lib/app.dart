@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: '这是我的信息'),
+      home: const MyHomePage(title: 'app'),
       routes: {
         '/login': (context) => LoginScreen(),
       },
@@ -114,7 +114,7 @@ class _FormTestRouteState extends State<FormTestRoute> {
             controller: _pwdController,
             decoration: InputDecoration(
               labelText: "密码",
-              hintText: "您的登录密码",
+              hintText: "您的密码",
               icon: Icon(Icons.lock),
             ),
             obscureText: true,
@@ -175,52 +175,59 @@ class LoginScreen extends StatelessWidget {
               ),
               obscureText: true,
             ),
-            ElevatedButton(
-  style: ElevatedButton.styleFrom(
-    padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 18.0),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(3.0),
-    ),
-    primary: Colors.red,
-    onPrimary: Colors.white,
-    shadowColor: Colors.black54,
-    elevation: 4.0,
-  ),
-  child: Text("登录"),
-  onPressed: () {
-    // 获取输入的用户名和密码
-    String username = _usernameController.text;
-    String password = _passwordController.text;
+            SizedBox(height: 20), // 添加一个间距
+            Align(
+              alignment: Alignment.center,
+              child: Container(
+                width: 200.0, // 设置按钮宽度
+                height: 50.0, // 设置按钮高度
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.all(0), // 移除内边距
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(100.0),
+                    ),
+                    primary: Colors.red,
+                    onPrimary: Colors.white,
+                    shadowColor: Colors.black54,
+                    elevation: 4.0,
+                  ),
+                  child: Text("登录"),
+                  onPressed: () {
+                    // 获取输入的用户名和密码
+                    String username = _usernameController.text;
+                    String password = _passwordController.text;
 
-    // 进行登录验证
-    bool loginSuccess = performLogin(username, password);
+                    // 进行登录验证
+                    bool loginSuccess = performLogin(username, password);
 
-    if (loginSuccess) {
-      // 登录成功
-      // 进行相应的操作，如跳转到主页
-    } else {
-      // 登录失败
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('登录失败'),
-            content: Text('账号或密码错误，请重新输入'),
-            actions: <Widget>[
-              TextButton(
-                child: Text('确定'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
+                    if (loginSuccess) {
+                      // 登录成功
+                      // 进行相应的操作，如跳转到主页
+                    } else {
+                      // 登录失败
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text('登录失败'),
+                            content: Text('账号或密码错误，请重新输入'),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text('确定'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                  },
+                ),
               ),
-            ],
-          );
-        },
-      );
-    }
-  },
-)
-
+            ),
           ],
         ),
       ),
