@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'app'),
+      home: const MyHomePage(title: '这是我的信息'),
       routes: {
         '/login': (context) => LoginScreen(),
       },
@@ -43,6 +43,33 @@ class _MyHomePageState extends State<MyHomePage> {
     Navigator.pushNamed(context, '/login');
   }
 
+  void _showRegistrationSuccessDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('注册成功'),
+          content: Text('您已成功注册！'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('立即登录'),
+              onPressed: () {
+                Navigator.pop(context); // 关闭对话框
+                _navigateToLogin(); // 跳转到登录页面
+              },
+            ),
+            TextButton(
+              child: Text('稍后登录'),
+              onPressed: () {
+                Navigator.pop(context); // 关闭对话框
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,9 +80,8 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            
             FormTestRoute(
-              onRegisterSuccess: _navigateToLogin,
+              onRegisterSuccess: _showRegistrationSuccessDialog,
             ),
           ],
         ),
@@ -90,7 +116,7 @@ class _FormTestRouteState extends State<FormTestRoute> {
       widget.onRegisterSuccess();
     }
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -114,7 +140,7 @@ class _FormTestRouteState extends State<FormTestRoute> {
             controller: _pwdController,
             decoration: InputDecoration(
               labelText: "密码",
-              hintText: "您的密码",
+              hintText: "您的登录密码",
               icon: Icon(Icons.lock),
             ),
             obscureText: true,
