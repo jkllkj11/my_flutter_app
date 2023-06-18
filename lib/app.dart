@@ -116,7 +116,7 @@ class _FormTestRouteState extends State<FormTestRoute> {
       widget.onRegisterSuccess();
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -229,7 +229,12 @@ class LoginScreen extends StatelessWidget {
 
                     if (loginSuccess) {
                       // 登录成功
-                      // 进行相应的操作，如跳转到主页
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => UserInfoPage(username: username, password: password),
+                        ),
+                      );
                     } else {
                       // 登录失败
                       showDialog(
@@ -265,6 +270,43 @@ class LoginScreen extends StatelessWidget {
     // 根据注册时的用户名和密码进行验证
     // 返回登录结果
     // 这里只是一个示例，实际逻辑需要根据你的需求进行修改
-    return false;
+
+    // 假设注册的用户名为 "admin"，密码为 "password"
+    if (username == "admin" && password == "password") {
+      return true; // 登录成功
+    } else {
+      return false; // 登录失败
+    }
+  }
+}
+
+class UserInfoPage extends StatelessWidget {
+  final String username;
+  final String password;
+
+  const UserInfoPage({Key? key, required this.username, required this.password}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('用户信息'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              '用户名: $username',
+              style: TextStyle(fontSize: 20),
+            ),
+            Text(
+              '密码: $password',
+              style: TextStyle(fontSize: 20),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
