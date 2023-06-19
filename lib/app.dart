@@ -14,13 +14,16 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: '这是我的信息'),
+      initialRoute: '/',
       routes: {
+        '/': (context) => const MyHomePage(title: '这是我的信息'),
         '/login': (context) => LoginScreen(),
+        '/userInfo': (context) => UserInfoPage(),
       },
     );
   }
 }
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -32,6 +35,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  String? registeredUsername;
+  String? registeredPassword;
 
   void _incrementCounter() {
     setState(() {
@@ -40,10 +45,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _navigateToLogin() {
-    Navigator.pushNamed(context, '/login');
+    Navigator.pushNamed(context, '/login', arguments: {
+      'registeredUsername': registeredUsername,
+      'registeredPassword': registeredPassword,
+    });
   }
 
-  void _showRegistrationSuccessDialog() {
+  void _showRegistrationSuccessDialog(String username, String password) {
     showDialog(
       context: context,
       builder: (context) {
@@ -68,6 +76,8 @@ class _MyHomePageState extends State<MyHomePage> {
         );
       },
     );
+    registeredUsername = username;
+    registeredPassword = password;
   }
 
   @override
@@ -96,9 +106,10 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class FormTestRoute extends StatefulWidget {
-  final VoidCallback onRegisterSuccess;
+  final Function(String, String) onRegisterSuccess;
 
-  const FormTestRoute({Key? key, required this.onRegisterSuccess}) : super(key: key);
+  const FormTestRoute({Key? key, required this.onRegisterSuccess})
+      : super(key: key);
 
   @override
   _FormTestRouteState createState() => _FormTestRouteState();
@@ -113,7 +124,9 @@ class _FormTestRouteState extends State<FormTestRoute> {
     if (_formKey.currentState!.validate()) {
       // 验证通过提交数据
       // 模拟注册成功
-      widget.onRegisterSuccess();
+      String username = _unameController.text;
+      String password = _pwdController.text;
+      widget.onRegisterSuccess(username, password);
     }
   }
 
@@ -176,137 +189,152 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('登录'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            TextFormField(
-              controller: _usernameController,
-              decoration: InputDecoration(
-                labelText: "用户名",
-                hintText: "请输入注册时的用户名",
-                icon: Icon(Icons.person),
-              ),
-            ),
-            TextFormField(
-              controller: _passwordController,
-              decoration: InputDecoration(
-                labelText: "密码",
-                hintText: "请输入注册时的密码",
-                icon: Icon(Icons.lock),
-              ),
-              obscureText: true,
-            ),
-            SizedBox(height: 20), // 添加一个间距
-            Align(
-              alignment: Alignment.center,
-              child: Container(
-                width: 200.0, // 设置按钮宽度
-                height: 50.0, // 设置按钮高度
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.all(0), // 移除内边距
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(100.0),
-                    ),
-                    primary: Colors.red,
-                    onPrimary: Colors.white,
-                    shadowColor: Colors.black54,
-                    elevation: 4.0,
-                  ),
-                  child: Text("登录"),
-                  onPressed: () {
-                    // 获取输入的用户名和密码
-                    String username = _usernameController.text;
-                    String password = _passwordController.text;
+    final Map<String, dynamic>? arguments =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
 
-                    // 进行登录验证
-                    bool loginSuccess = performLogin(username, password);
+    if (arguments != null) {
+      final String registeredUsername = arguments['registeredUsername'];
+      final String registeredPassword = arguments['registeredPassword'];
 
-                    if (loginSuccess) {
-                      // 登录成功
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => UserInfoPage(username: username, password: password),
-                        ),
-                      );
-                    } else {
-                      // 登录失败
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: Text('登录失败'),
-                            content: Text('账号或密码错误，请重新输入'),
-                            actions: <Widget>[
-                              TextButton(
-                                child: Text('确定'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    }
-                  },
+      bool performLogin(String username, String password) {
+        // 进行登录验证，比较输入的用户名和密码与保存的注册信息是否相同
+        return username == registeredUsername && password == registeredPassword;
+      }
+
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('登录'),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              TextFormField(
+                controller: _usernameController,
+                decoration: InputDecoration(
+                  labelText: "用户名",
+                  hintText: "请输入注册时的用户名",
+                  icon: Icon(Icons.person),
                 ),
               ),
-            ),
-          ],
+              TextFormField(
+                controller: _passwordController,
+                decoration: InputDecoration(
+                  labelText: "密码",
+                  hintText: "请输入注册时的密码",
+                  icon: Icon(Icons.lock),
+                ),
+                obscureText: true,
+              ),
+              SizedBox(height: 20), // 添加一个间距
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  width: 200.0, // 设置按钮宽度
+                  height: 50.0, // 设置按钮高度
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.all(0), // 移除内边距
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(100.0),
+                      ),
+                      primary: Colors.red,
+                      onPrimary: Colors.white,
+                      shadowColor: Colors.black54,
+                      elevation: 4.0,
+                    ),
+                    child: Text("登录"),
+                    onPressed: () {
+                      // 获取输入的用户名和密码
+                      String username = _usernameController.text;
+                      String password = _passwordController.text;
+
+                      if (performLogin(username, password)) {
+                        // 登录成功，跳转到用户信息页面并传递用户名和密码
+                        Navigator.pushNamed(context, '/userInfo', arguments: {
+                          'username': username,
+                          'password': password,
+                        });
+                      } else {
+                        // 登录失败，显示错误提示
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('登录失败'),
+                              content: Text('用户名或密码不正确'),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text('确定'),
+                                  onPressed: () {
+                                    Navigator.pop(context); // 关闭对话框
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
-  }
-
-  bool performLogin(String username, String password) {
-    // 进行登录验证的逻辑
-    // 根据注册时的用户名和密码进行验证
-    // 返回登录结果
-    // 这里只是一个示例，实际逻辑需要根据你的需求进行修改
-
-    // 假设注册的用户名为 "admin"，密码为 "password"
-    if (username == "admin" && password == "password") {
-      return true; // 登录成功
+      );
     } else {
-      return false; // 登录失败
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('登录'),
+        ),
+        body: Center(
+          child: Text('未提供注册信息'),
+        ),
+      );
     }
   }
 }
 
 class UserInfoPage extends StatelessWidget {
-  final String username;
-  final String password;
-
-  const UserInfoPage({Key? key, required this.username, required this.password}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('用户信息'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              '用户名: $username',
-              style: TextStyle(fontSize: 20),
-            ),
-            Text(
-              '密码: $password',
-              style: TextStyle(fontSize: 20),
-            ),
-          ],
+    final Map<String, dynamic>? arguments =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+
+    if (arguments != null) {
+      final String username = arguments['username'];
+      final String password = arguments['password'];
+
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('用户信息'),
         ),
-      ),
-    );
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                '用户名: $username',
+                style: TextStyle(fontSize: 20),
+              ),
+              Text(
+                '密码: $password',
+                style: TextStyle(fontSize: 20),
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('用户信息'),
+        ),
+        body: Center(
+          child: Text('未提供用户信息'),
+        ),
+      );
+    }
   }
 }
