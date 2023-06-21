@@ -295,46 +295,144 @@ class LoginScreen extends StatelessWidget {
     }
   }
 }
+class UserInfoPage extends StatefulWidget {
+  @override
+  _UserInfoPageState createState() => _UserInfoPageState();
+}
 
-class UserInfoPage extends StatelessWidget {
+class _UserInfoPageState extends State<UserInfoPage> {
+  int _selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic>? arguments =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
-
-    if (arguments != null) {
-      final String username = arguments['username'];
-      final String password = arguments['password'];
-
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('用户信息'),
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                '用户名: $username',
-                style: TextStyle(fontSize: 20),
-              ),
-              Text(
-                '密码: $password',
-                style: TextStyle(fontSize: 20),
-              ),
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('App'),
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('images/OIP (1).jpg'), // 替换为你的图片路径
+            fit: BoxFit.cover,
           ),
         ),
-      );
-    } else {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('用户信息'),
+        child: Column(
+          children: [
+            Wrap(
+              alignment: WrapAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {},
+                  child: const Text('全部'),
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: Size(300, 40), // 设置按钮的宽度和高度
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: const Text('男生'),
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: Size(325, 40), // 设置按钮的宽度和高度
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: const Text('女生'),
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: Size(325, 40), // 设置按钮的宽度和高度
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: const Text('更多'),
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: Size(325, 40), // 设置按钮的宽度和高度
+                  ),
+                ),
+              ],
+            ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Column(
+                        children: [
+                          Image.asset(
+                            'images/OIP (2).jpg',
+                            width: 200,
+                            height: 200,
+                          ),
+                          Text('红楼梦'),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Image.asset(
+                            'images/OIP (3).jpg',
+                            width: 200,
+                            height: 200,
+                          ),
+                          Text('三国演义'),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Column(
+                        children: [
+                          Image.asset(
+                            'images/OIP.jpg',
+                            width: 200,
+                            height: 200,
+                          ),
+                          Text('白蔷会'),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Image.asset(
+                            'images/R1.png',
+                            width: 200,
+                            height: 200,
+                          ),
+                          Text('水浒传'),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-        body: Center(
-          child: Text('未提供用户信息'),
-        ),
-      );
-    }
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: '书架',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.business),
+            label: '更多',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
+    );
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 }
+
